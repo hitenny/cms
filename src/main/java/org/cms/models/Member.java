@@ -30,9 +30,6 @@ public class Member {
 
     SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy");
     
-    public Member() {
-    }
-    
     public void merge(Member updatedMember) throws ParseException {
         this.setName(updatedMember.getName() != null ? updatedMember.getName() : this.getName() );
         this.setAddress(updatedMember.getAddress() != null ? updatedMember.getAddress() : this.getAddress());
@@ -130,7 +127,7 @@ public class Member {
     }
 
     public String getJoinedDate() {
-        return format.format(joinedDate);
+        return joinedDate != null ? format.format(joinedDate) : null;
     }
 
     public void setJoinedDate(Date joinedDate) {
@@ -138,7 +135,7 @@ public class Member {
     }
 
     public String getBirthDay() {
-        return format.format(birthDay);
+        return birthDay != null ? format.format(birthDay) : null;
     }
 
     public void setBirthDay(Date birthDay) {
@@ -146,7 +143,7 @@ public class Member {
     }
 
     public String getWeddingDay() {
-        return format.format(weddingDay);
+        return weddingDay != null ? format.format(weddingDay) : null;
     }
 
     public void setWeddingDay(Date weddingDay) {

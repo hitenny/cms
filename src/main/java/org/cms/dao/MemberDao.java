@@ -27,7 +27,8 @@ public class MemberDao extends CmsBaseDao implements ICmsDao<Member>  {
 
     @Override
     public void save(Member member) {
-        String query = "INSERT INTO MEMBERS VALUES(NULL,'" + member.getName() + "', '" + member.getSex() + "', " + member.getPhone() + ", '" + member.getEmail() + "', '" + member.getAddress() + "', '" + member.getMemberType() + "', " + member.getRelatedToId() + ", '" + member.getRelationType() + "', '" + member.getMotherParish() + "', '" + member.getJoinedDate() + "', '" + member.getBirthDay() + "', '" + member.getWeddingDay() + "', '" + member.isHeadOfFamily() + "')";
+        Long id = member.getId() > 0 ? member.getId() : null;
+        String query = "INSERT INTO MEMBERS VALUES(" + id + ",'" + member.getName() + "', '" + member.getSex() + "', " + member.getPhone() + ", '" + member.getEmail() + "', '" + member.getAddress() + "', '" + member.getMemberType() + "', " + member.getRelatedToId() + ", '" + member.getRelationType() + "', '" + member.getMotherParish() + "', '" + member.getJoinedDate() + "', '" + member.getBirthDay() + "', '" + member.getWeddingDay() + "', '" + member.isHeadOfFamily() + "')";
         executeQuery(query);
     }
 
@@ -36,7 +37,10 @@ public class MemberDao extends CmsBaseDao implements ICmsDao<Member>  {
         Optional<Member> memberFromDb = get(member.getId());
         if(memberFromDb.isPresent()) {
             try {
-                memberFromDb.get().merge(member);
+                Member existingMember = memberFromDb.get();
+                delete(existingMember.getId());
+                existingMember.merge(member);
+                save(existingMember);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -44,8 +48,8 @@ public class MemberDao extends CmsBaseDao implements ICmsDao<Member>  {
     }
 
     @Override
-    public void delete(Member member) {
-        execute("DELETE FROM MEMBERS WHERE ID = " + member.getId());
+    public void delete(long id) {
+        execute("DELETE FROM MEMBERS WHERE ID = " + id);
     }
 
     private List<Member> getMembersFromDb() {
